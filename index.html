@@ -38,15 +38,15 @@
         }
         loadProducts();
 
-        function deleteProduct(id){
+        function deleteProduct(id) {
             // console.log(id);
             fetch(`/delete/${id}`, {
-                method:'DELETE'
+                method: 'DELETE'
             })
-            .then(res=>res.json())
-            .then(result =>{
-                console.log('deleted successfully!')
-            })
+                .then(res => res.json())
+                .then(result => {
+                    console.log('deleted successfully!')
+                })
         }
     </script>
 </body>

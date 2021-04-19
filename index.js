@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
 
 const password = 'JAa63mUYbq4GUc';
 
@@ -10,7 +11,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 const app = express();
 app.use(bodyParser.json());
-app.use (bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', (req, res) => {
     // res.send('hello i am working');
@@ -24,11 +25,11 @@ client.connect(err => {
     // const product = { name: 'modhu', price: 25, quantity: 20};
 
     // read from db
-    app.get("/products", (req, res)=>{
+    app.get("/products", (req, res) => {
         productCollection.find({})
-        .toArray((err, documents)=>{
-            res.send(documents);
-        })
+            .toArray((err, documents) => {
+                res.send(documents);
+            })
     })
 
     // add product
@@ -36,10 +37,18 @@ client.connect(err => {
         const product = req.body;
         console.log(product);
         productCollection.insertOne(product)
-        .then(result => {
-            console.log('one product added')
-            res.send('success')
-        })
+            .then(result => {
+                console.log('one product added')
+                res.send('success')
+            })
+    })
+
+    app.delete('/delete/:id', (req, res) => {
+        // console.log(req.params.id);
+        productCollection.deleteOne({ _id: ObjectId(req.params.id) })
+            .then(result => {
+                console.log(result);
+            })
     })
 
     console.log('database connected!');
