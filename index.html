@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Look mom, i have a mongo database</h1>
+    <form action="/addProduct" method="POST">
+        <input type="text" placeholder="name" name="name">
+        <input type="text" placeholder="price" name="price">
+        <input type="text" placeholder="quantity" name="quantity">
+        <button type="submit">Add Product</button>
+    </form>
+    <div id="products">
+
+    </div>
+    <script>
+        // load data from fb
+        function loadProducts() {
+            fetch('/products')
+                .then(res => res.json())
+                .then(products => {
+                    console.log(products);
+                    const container = document.getElementById('products');
+                    products.forEach(pd => {
+                        const p = document.createElement('p');
+                        p.innerHTML = `<strong>${pd.name}</strong> -- Price: ${pd.price} Quantity: ${pd.quantity}
+                        <button onclick="deleteProduct('${pd._id}')">delete</button>
+                        `;
+                        container.appendChild(p);
+                    });
+                })
+        }
+        loadProducts();
+
+        function deleteProduct(id){
+            // console.log(id);
+            fetch(`/delete/${id}`, {
+                method:'DELETE'
+            })
+            .then(res=>res.json())
+            .then(result =>{
+                console.log('deleted successfully!')
+            })
+        }
+    </script>
+</body>
+
+</html>
