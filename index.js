@@ -32,11 +32,11 @@ client.connect(err => {
             })
     })
 
-    app.get('/product/:id', (req, res)=>{
-        productCollection.find({_id: ObjectId(req.params.id)})
-        .toArray((err, documents)=>{
-            res.send(documents[0]);
-        })
+    app.get('/product/:id', (req, res) => {
+        productCollection.find({ _id: ObjectId(req.params.id) })
+            .toArray((err, documents) => {
+                res.send(documents[0]);
+            })
     })
 
     // add product
@@ -46,15 +46,33 @@ client.connect(err => {
         productCollection.insertOne(product)
             .then(result => {
                 console.log('one product added')
-                res.send('success')
+                // res.send('success');
+                res.redirect('/');
             })
     })
 
+    app.patch('/update/:id', (req, res) => {
+        console.log(req.body.price)
+        productCollection.updateOne({ _id: ObjectId(req.params.id) },
+            {
+                $set: { price: req.body.price, quantity: req.body.quantity }
+            })
+            .then(result =>{
+                // console.log(result);
+                // means updated true
+                res.send(result.modifiedCount > 0);
+            })
+
+    })
+
+
     app.delete('/delete/:id', (req, res) => {
         // console.log(req.params.id);
-        productCollection.deleteOne({ _id: ObjectId(req.params.id)})
+        productCollection.deleteOne({ _id: ObjectId(req.params.id) })
             .then(result => {
-                console.log(result);
+                // console.log(result);
+                // that means deleted 1 item
+                res.send(result.deletedCount > 0);
             })
     })
 
